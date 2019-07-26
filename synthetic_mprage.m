@@ -39,7 +39,7 @@ fPD = PD;
 fR2_star = exp(-echo_spacing * R2_star);
 
 % T1w_image = real(fR1 .* sind(flip_angle)); % this is here just in case someone wants to get an MPRAGE from only R1 data
-T1w_image = real(fR1 .* fPD .* fR2_star .* sind(flip_angle)); % I am unsure about this bit where I only take the real component of the complex number ... I dont know if i should be taking the magnitude
+T1w_image = fR1 .* fPD .* fR2_star .* sind(flip_angle); % I am unsure about this bit where I only take the real component of the complex number ... I dont know if i should be taking the magnitude
 
 T1w_image = T1w_image * 1000; % to convert to milliseconds
 
