@@ -1,6 +1,6 @@
 function [T1w_image , T1w_header] = synthetic_mprage(R1, PD, R2_star)
 
-%% Function to create a synthetic MPRAGE based on Lorio et al. (2015)
+%% Function to create a synthetic MPRAGE based on Lor et al. (2015)
 % Neurobiological origin of spurious brain morphological changes: A quantitative MRI study
 % The synthetic T1w parameters were obtained from this paper. These were in
 % turn obtained from Tardif et al. (2009).
@@ -20,7 +20,7 @@ PD = spm_read_vols(spm_vol(PD));
 R2_star = spm_read_vols(spm_vol(R2_star));
 
 flip_angle = 9; % in degrees
-echo_spacing = 0.0099; % in seconds (this is because R1, PD and R2_star are in seconds in our data)
+echo_spacing = 0.0099; % in seconds (this is because R1, PD and R2_star are in milliseconds in our data)
 TI = .960; % in seconds
 readout_duration = 176 * echo_spacing; % in seconds
 TR = 2.42;
@@ -32,16 +32,16 @@ E2 = exp(-delay_time*R1_image);
 E3 = exp(-(readout_duration ./  T1_star));
 E4 = exp(-(readout_duration ./ (2*T1_star)));
 
-fR1 = E4 .* ((1-(2.*E1)+E1.*E2) ./ (1+E1.*E2.*E3)) + T1_star .* R1_image .* ((1+E1.*E2.*E3-E4-E4.*E1.*E2) ./ (1+E1.*E2.*E3)); % this bit needs more thourough checking
+t1 = (1 - 2.*E1 + E1.*E2) ./ (1 + E1.*E2.*E3);
+t2 = (1 + E1.*E2.*E3 - E4 - E4.*E1.*E2) ./ (1 + E1.*E2.*E3);
+fR1 = E4 .* t1 + T1_star .* R1_image .* t2; % this bit needs more thourough checking
 fPD = PD;
 fR2_star = exp(-echo_spacing * R2_star);
-
 
 % T1w_image = real(fR1 .* sind(flip_angle)); % this is here just in case someone wants to get an MPRAGE from only R1 data
 T1w_image = real(fR1 .* fPD .* fR2_star .* sind(flip_angle)); % I am unsure about this bit where I only take the real component of the complex number ... I dont know if i should be taking the magnitude
 
 T1w_image = T1w_image * 1000; % to convert to milliseconds
-
 
 T1w_header = header;
 T1w_header.fname = 'synthetic_mprage.nii';
