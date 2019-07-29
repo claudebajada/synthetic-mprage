@@ -1,6 +1,6 @@
 function [T1w_image , T1w_header] = synthetic_mprage(R1, PD, R2_star)
 
-%% Function to create a synthetic MPRAGE based on Lor et al. (2015)
+%% Function to create a synthetic MPRAGE based on Lorio et al. (2015)
 % Neurobiological origin of spurious brain morphological changes: A quantitative MRI study
 % The synthetic T1w parameters were obtained from this paper. These were in
 % turn obtained from Tardif et al. (2009).
