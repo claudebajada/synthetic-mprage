@@ -25,6 +25,7 @@ TI = .960; % in seconds
 readout_duration = 176 * echo_spacing; % in seconds
 TR = 2.42;
 delay_time = TR - (TI + (readout_duration/2));
+TE = 0.00419;
 
 T1_star = (R1_image - ((1/echo_spacing) .* (log(cosd(flip_angle))))).^-1;
 E1 = exp(-TI .* R1_image);
@@ -36,7 +37,7 @@ t1 = (1 - 2.*E1 + E1.*E2) ./ (1 + E1.*E2.*E3);
 t2 = (1 + E1.*E2.*E3 - E4 - E4.*E1.*E2) ./ (1 + E1.*E2.*E3);
 fR1 = E4 .* t1 + T1_star .* R1_image .* t2; % this bit needs more thourough checking
 fPD = PD;
-fR2_star = exp(-echo_spacing * R2_star);
+fR2_star = exp(-TE * R2_star);
 
 % T1w_image = real(fR1 .* sind(flip_angle)); % this is here just in case someone wants to get an MPRAGE from only R1 data
 T1w_image = fR1 .* fPD .* fR2_star .* sind(flip_angle); 
